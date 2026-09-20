@@ -7,6 +7,10 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { listClientNames } from "@/lib/metro/queries";
 import { BaseLayoutProps } from "@/types/page-props";
 
+// Every screen reads the database (the sidebar lists the clients), so nothing under this
+// layout is prerendered at build time: a Vercel build has no database to ask.
+export const dynamic = "force-dynamic";
+
 // Every screen except presentation mode: the sidebar at 1024 and above, the tab bar below.
 const AppLayout = async ({ children, params }: BaseLayoutProps) => {
   const { locale } = await params;
