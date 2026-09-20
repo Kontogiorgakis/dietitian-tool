@@ -129,7 +129,7 @@ export const AppSidebar = ({ clients }: AppSidebarProps) => {
                       <SidebarMenuButton asChild isActive={isCurrent} tooltip={client.name} className="h-12 gap-0 px-3 text-body group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-1!">
                         <div>
                           <Link href={`/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3">
-                            <UserAvatar name={client.name} size="md" className="size-8 text-caption group-data-[collapsible=icon]:size-6 group-data-[collapsible=icon]:text-[11px]" />
+                            <UserAvatar name={client.name} size="md" className="size-8 text-caption group-data-[collapsible=icon]:size-7" />
                             <span className="truncate">{client.name}</span>
                           </Link>
                           {/* The chevron sits at the right edge of the row, always visible, and turns down when the tree is open. */}

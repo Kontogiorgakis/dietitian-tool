@@ -90,3 +90,12 @@ Round 3 review: verified at 1280 (dashboard cards, profile card) and at the phon
 - [x] Sidebar lists every client under Πελάτες with a + for a new client; the open client (from the pathname) expands into Καρτέλα, Νέα μέτρηση, Στοιχεία, Ιστορικό, Παρουσίαση; other clients expand on their chevron
 - [x] Store and client layout removed; names come from the (app) layout; client actions revalidate the layout
 - [x] Chart expand dialog and bold spans verified after a clean restart (the earlier "not working" was a stale tab against a server that had been restarted)
+
+## Round 5: polish (2026-09-20)
+
+- [x] Nothing under 14px: caption 14, label 15, body 16, title-m 18, num-s 16, num-m 19; chart axes 14; shadcn tooltip/dialog text lifted
+- [x] Tints (sage, teal, sand, clay) on card chips, tiles, chart cards, dashboard hero, calendar; initials avatars in every list
+- [x] Sidebar client tree: avatars, accordion, chevron at the right edge, bigger rows; ScrollArea shells; collapsed trigger centered
+- [x] shadcn CLI trap found: sidebar.tsx and select.tsx imported cn from the stray "cn" package, so overrides never merged; fixed and recorded
+- [x] Νέος πελάτης rebuilt: intro text, cards (Ταυτότητα, Επικοινωνία; Στόχος, Ιατρικό, Αλλεργίες, Τρόπος ζωής), required marks and hints, activity as a choice, live preview of the list row
+- [x] Private Vercel deploy: no sitemap, robots disallow, noindex, no metadataBase

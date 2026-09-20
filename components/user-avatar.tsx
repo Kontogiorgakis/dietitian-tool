@@ -10,7 +10,7 @@ interface UserAvatarProps {
 }
 
 const SIZES = {
-  sm: "size-6 text-[11px]",
+  sm: "size-7 text-caption",
   md: "size-9 text-label",
   lg: "size-12 text-body",
 } as const;

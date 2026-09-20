@@ -61,16 +61,17 @@
   /* ── Type: one family, Source Sans 3 ── */
   --font-sans: var(--font-source-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  --text-caption: 12px;
-  --text-caption--line-height: 16px;
-  --text-label: 13px;
-  --text-label--line-height: 18px;
+  /* Nothing below 14px anywhere (Manos, 2026-09-20): the small steps were lifted. */
+  --text-caption: 14px;
+  --text-caption--line-height: 20px;
+  --text-label: 15px;
+  --text-label--line-height: 20px;
   --text-label--letter-spacing: 0.01em;
   --text-label--font-weight: 500;
-  --text-body: 15px;
-  --text-body--line-height: 22px;
-  --text-title-m: 17px;
-  --text-title-m--line-height: 24px;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-title-m: 18px;
+  --text-title-m--line-height: 26px;
   --text-title-m--font-weight: 600;
   --text-title-l: 22px;
   --text-title-l--line-height: 28px;
@@ -79,11 +80,11 @@
   --text-display--line-height: 32px;
   --text-display--letter-spacing: -0.01em;
   --text-display--font-weight: 600;
-  --text-num-s: 15px;
-  --text-num-s--line-height: 20px;
+  --text-num-s: 16px;
+  --text-num-s--line-height: 22px;
   --text-num-s--font-weight: 600;
-  --text-num-m: 18px;
-  --text-num-m--line-height: 24px;
+  --text-num-m: 19px;
+  --text-num-m--line-height: 26px;
   --text-num-m--font-weight: 600;
   --text-num-l: 30px;
   --text-num-l--line-height: 34px;

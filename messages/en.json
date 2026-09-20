@@ -221,7 +221,41 @@
       "required": "First name, last name, date of birth and height are required."
     },
     "editTitle": "Client details",
-    "saveBasics": "Save details"
+    "saveBasics": "Save details",
+    "intro1": "What the practice needs to open the file. Height goes here because BMI and waist-to-height come from it.",
+    "intro2": "What makes the advice better. It can be filled in at a later visit.",
+    "cards": {
+      "identity": "Identity",
+      "identityHint": "Name, sex and date of birth.",
+      "contact": "Contact and body measures",
+      "contactHint": "Phone for appointments, height for the calculations.",
+      "goal": "Goal",
+      "goalHint": "In the client's words, and the number that goes with it.",
+      "medical": "Medical",
+      "medicalHint": "What to remember before giving advice. Shown in the Attention block.",
+      "allergies": "Allergies and intolerances",
+      "allergiesHint": "Also in the Attention block.",
+      "lifestyle": "Lifestyle",
+      "lifestyleHint": "Activity, preferences and habits."
+    },
+    "preview": {
+      "title": "How it will look",
+      "hint": "The row in the list, as you type.",
+      "namePlaceholder": "Client name",
+      "meta": "{age} years · {height} cm",
+      "unknownAge": "age",
+      "unknownHeight": "height",
+      "phoneHint": "Used for search and appointments.",
+      "heightHint": "Used for BMI and waist-to-height ratio.",
+      "targetHint": "The dashed line on the weight chart."
+    },
+    "required": "required",
+    "activity": {
+      "sedentary": "Sedentary",
+      "light": "Light",
+      "moderate": "Moderate",
+      "active": "Active"
+    }
   },
   "Presentation": {
     "since": "since {date} · {visits}",

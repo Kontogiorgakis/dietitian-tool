@@ -39,7 +39,7 @@ const seriesDot = (color: string, lastIndex: number, endLabel: string) => {
       <g key={index}>
         <circle cx={cx} cy={cy} r={last ? 4.5 : 3.5} fill={last ? color : "var(--surface-page)"} stroke={color} strokeWidth={2} />
         {last && (
-          <text x={cx + 8} y={cy + 4} fill={color} fontSize={13} fontWeight={600} className="tabular-nums">
+          <text x={cx + 8} y={cy + 4} fill={color} fontSize={14} fontWeight={600} className="tabular-nums">
             {endLabel}
           </text>
         )}
@@ -58,7 +58,7 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
 
   return (
     <ChartContainer config={config} className={cn("aspect-auto h-full w-full", className)} aria-label={spec.ariaLabel}>
-      <LineChart data={points} margin={{ top: 12, right: 44, bottom: 0, left: 0 }}>
+      <LineChart data={points} margin={{ top: 12, right: 52, bottom: 0, left: 0 }}>
         <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
         <XAxis
           dataKey="day"
@@ -69,7 +69,7 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
           tickLine={false}
           axisLine={false}
           tickMargin={8}
-          tick={{ fill: "var(--ink-soft)", fontSize: 11 }}
+          tick={{ fill: "var(--ink-soft)", fontSize: 14 }}
         />
         {series.map((s) => (
           <YAxis
@@ -81,8 +81,8 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
             tickFormatter={(v: number) => formatNum(v, 0)}
             tickLine={false}
             axisLine={false}
-            width={s.key === "a" ? 36 : 32}
-            tick={{ fill: s.color === "var(--series-primary)" && series.length === 1 ? "var(--ink-soft)" : s.color, fontSize: 11 }}
+            width={s.key === "a" ? 42 : 38}
+            tick={{ fill: s.color === "var(--series-primary)" && series.length === 1 ? "var(--ink-soft)" : s.color, fontSize: 14 }}
           />
         ))}
         {band && (
@@ -93,7 +93,7 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
             fill="var(--chart-band)"
             fillOpacity={1}
             stroke="none"
-            label={{ value: band.label, position: "insideTopLeft", fill: "var(--ink-soft)", fontSize: 10 }}
+            label={{ value: band.label, position: "insideTopLeft", fill: "var(--ink-soft)", fontSize: 14 }}
           />
         )}
         {reference && (
@@ -103,7 +103,7 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
             stroke="var(--chart-reference)"
             strokeDasharray="5 5"
             strokeWidth={1.5}
-            label={{ value: reference.label, position: "insideTopRight", fill: "var(--chart-reference)", fontSize: 11 }}
+            label={{ value: reference.label, position: "insideTopRight", fill: "var(--chart-reference)", fontSize: 14 }}
           />
         )}
         <ChartTooltip
