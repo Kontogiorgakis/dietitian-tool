@@ -3,6 +3,10 @@
 <!-- No `paths` frontmatter on purpose: this rule loads every session. The mistake it
      prevents happens in conversation ("let's deploy"), not while reading a file. -->
 
+## Current state (decided by Manos, 2026-09-20)
+
+Μέτρο is a private practice tool shown on its Vercel URL for now, so **nothing in the build reads a public origin**: there is no sitemap, `app/robots.ts` disallows everything, and the layout sets `robots: { index: false }` with no `metadataBase`. `lib/general/site-url.ts` stays for the day a domain exists; nothing imports it until then. When a domain is bought, follow "After the domain is bought" below, restore `metadataBase` and a sitemap, and re-check `robots.ts`. The rule below still holds: the Vercel host is simply not referenced anywhere.
+
 ## NEVER hardcode a `*.vercel.app` URL as the canonical base
 
 **Before the domain exists: leave `NEXT_PUBLIC_SITE_URL` unset and let the build fail loudly. Do not paste the Vercel URL "for now".**

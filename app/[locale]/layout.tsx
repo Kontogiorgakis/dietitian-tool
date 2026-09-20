@@ -7,7 +7,6 @@ import { hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 
 import { Providers } from "@/components/providers";
-import { SITE_URL } from "@/lib/general/site-url";
 import { routing } from "@/lib/i18n/routing";
 import { BaseLayoutProps } from "@/types/page-props";
 
@@ -19,9 +18,10 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
+// A private tool: no metadataBase (no public origin yet) and never indexed.
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
   title: "Μέτρο",
+  robots: { index: false, follow: false },
   description: "Μετρήσεις και πρόοδος πελατών διαιτολογικού γραφείου.",
 };
 

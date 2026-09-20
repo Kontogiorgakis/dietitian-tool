@@ -1,14 +1,12 @@
 import type { MetadataRoute } from "next";
 
-import { SITE_URL } from "@/lib/general/site-url";
-
+// Μέτρο is a private practice tool: nothing is meant to be indexed, and there is no
+// sitemap, so no public origin is needed to build. See .claude/rules/deployment-urls.md.
 const robots = (): MetadataRoute.Robots => ({
   rules: {
     userAgent: "*",
-    allow: "/",
-    disallow: ["/api/", "/admin/"],
+    disallow: "/",
   },
-  sitemap: `${SITE_URL}/sitemap.xml`,
 });
 
 export default robots;
