@@ -4,6 +4,7 @@ import { CalendarDays, ChevronRight, ClipboardList, House, type LucideIcon, Note
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
+import { LinkPending } from "@/components/metro/nav-button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -48,6 +49,7 @@ const NavList = ({ items, pathname }: { items: NavItem[]; pathname: string }) =>
           <Link href={item.href}>
             <item.icon strokeWidth={1.6} aria-hidden="true" />
             <span>{item.label}</span>
+            <LinkPending className="ml-auto" />
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -131,6 +133,7 @@ export const AppSidebar = ({ clients }: AppSidebarProps) => {
                           <Link href={`/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3">
                             <UserAvatar name={client.name} size="md" className="size-8 text-caption group-data-[collapsible=icon]:size-7" />
                             <span className="truncate">{client.name}</span>
+                            <LinkPending />
                           </Link>
                           {/* The chevron sits at the right edge of the row, always visible, and turns down when the tree is open. */}
                           <CollapsibleTrigger asChild>
@@ -153,6 +156,7 @@ export const AppSidebar = ({ clients }: AppSidebarProps) => {
                                 <Link href={item.href}>
                                   <item.icon strokeWidth={1.6} aria-hidden="true" />
                                   <span>{item.label}</span>
+                                  <LinkPending className="ml-auto" />
                                 </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>

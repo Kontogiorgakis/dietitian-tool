@@ -2,6 +2,7 @@ import { CalendarDays, ChartLine, ChevronRight, ClipboardList, Clock, Settings, 
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ChangeBadge } from "@/components/metro/change-badge";
+import { NavButton } from "@/components/metro/nav-button";
 import { SectionCard } from "@/components/metro/section-card";
 import { StatTile } from "@/components/metro/stat-tile";
 import { Button } from "@/components/ui/button";
@@ -43,12 +44,9 @@ const HomePage = async ({ params }: BasePageProps) => {
               <Settings strokeWidth={1.6} aria-hidden="true" />
             </Link>
           </Button>
-          <Button asChild variant="secondary" className="hidden lg:inline-flex">
-            <Link href="/appointments">
-              <CalendarDays strokeWidth={1.6} aria-hidden="true" />
-              {t("openCalendar")}
-            </Link>
-          </Button>
+          <NavButton href="/appointments" variant="secondary" icon={<CalendarDays strokeWidth={1.6} aria-hidden="true" />} className="hidden lg:inline-flex">
+            {t("openCalendar")}
+          </NavButton>
         </div>
       </header>
 
@@ -75,9 +73,9 @@ const HomePage = async ({ params }: BasePageProps) => {
                     <span className="truncate text-body font-semibold">{a.clientName}</span>
                     {a.note && <span className="truncate text-caption text-ink-muted">{a.note}</span>}
                   </Link>
-                  <Button asChild variant="secondary" size="sm">
-                    <Link href={`/clients/${a.clientId}/measure`}>{t("startMeasurement")}</Link>
-                  </Button>
+                  <NavButton href={`/clients/${a.clientId}/measure`} variant="secondary" size="sm">
+                    {t("startMeasurement")}
+                  </NavButton>
                 </li>
               ))}
             </ul>
@@ -105,9 +103,9 @@ const HomePage = async ({ params }: BasePageProps) => {
                     <span className="truncate text-body font-semibold">{c.name}</span>
                     <span className="text-caption text-ink-muted">{c.daysSince === null ? t("neverVisited") : t("daysSince", { count: c.daysSince })}</span>
                   </Link>
-                  <Button asChild variant="secondary" size="sm">
-                    <Link href={`/appointments/new?client=${c.id}`}>{t("book")}</Link>
-                  </Button>
+                  <NavButton href={`/appointments/new?client=${c.id}`} variant="secondary" size="sm">
+                    {t("book")}
+                  </NavButton>
                 </li>
               ))}
             </ul>

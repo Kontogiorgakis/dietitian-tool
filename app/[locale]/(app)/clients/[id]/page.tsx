@@ -4,10 +4,10 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { Chip } from "@/components/metro/change-badge";
 import { ProgressCharts } from "@/components/metro/charts/progress-charts";
+import { NavButton } from "@/components/metro/nav-button";
 import { BackLink, StickyBar } from "@/components/metro/screen-chrome";
 import { SectionCard } from "@/components/metro/section-card";
 import { StatTile } from "@/components/metro/stat-tile";
-import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/navigation";
 import { bmi } from "@/lib/metro/calc";
 import { ageAt, formatChange, formatDate, formatDayMonth, formatNum, formatTime, fullName } from "@/lib/metro/format";
@@ -54,15 +54,12 @@ const ClientDetailPage = async ({ params }: ClientPageProps) => {
 
   const actions = (
     <>
-      <Button asChild className="w-full split:w-auto">
-        <Link href={`/clients/${client.id}/measure`}>
-          <Plus strokeWidth={1.6} aria-hidden="true" />
-          {t("newMeasurement")}
-        </Link>
-      </Button>
-      <Button asChild variant="secondary" className="w-full split:w-auto">
-        <Link href={`/clients/${client.id}/present`}>{t("presentation")}</Link>
-      </Button>
+      <NavButton href={`/clients/${client.id}/measure`} icon={<Plus strokeWidth={1.6} aria-hidden="true" />} className="w-full split:w-auto">
+        {t("newMeasurement")}
+      </NavButton>
+      <NavButton href={`/clients/${client.id}/present`} variant="secondary" className="w-full split:w-auto">
+        {t("presentation")}
+      </NavButton>
     </>
   );
 

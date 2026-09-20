@@ -2,6 +2,7 @@ import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { ChangeBadge } from "@/components/metro/change-badge";
+import { LinkPending } from "@/components/metro/nav-button";
 import { UserAvatar } from "@/components/user-avatar";
 import { Link } from "@/lib/i18n/navigation";
 import { formatDayMonth, formatNum } from "@/lib/metro/format";
@@ -41,6 +42,7 @@ export const ClientList = ({ clients, query }: ClientListProps) => {
               <span className="truncate text-body font-semibold">{c.name}</span>
               <span className="text-caption text-ink-muted">{c.lastVisit ? t("lastVisit", { date: formatDayMonth(c.lastVisit) }) : t("noVisits")}</span>
             </span>
+            <LinkPending />
             <ChangeBadge changeKg={c.changeKg} towardGoal={c.towardGoal} />
           </Link>
         </li>

@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
+import { NavButton } from "@/components/metro/nav-button";
 import { PageHeader } from "@/components/metro/page-header";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/lib/i18n/navigation";
@@ -59,12 +60,9 @@ const AppointmentsPage = async ({ params, searchParams }: AppointmentsPageProps)
               <ChevronRight strokeWidth={1.6} aria-hidden="true" />
             </Link>
           </Button>
-          <Button asChild className="ml-auto hidden lg:inline-flex">
-            <Link href={newHref(today)}>
-              <Plus strokeWidth={1.6} aria-hidden="true" />
-              {t("newAppointment")}
-            </Link>
-          </Button>
+          <NavButton href={newHref(today)} icon={<Plus strokeWidth={1.6} aria-hidden="true" />} className="ml-auto hidden lg:inline-flex">
+            {t("newAppointment")}
+          </NavButton>
         </div>
       </PageHeader>
 
@@ -114,12 +112,9 @@ const AppointmentsPage = async ({ params, searchParams }: AppointmentsPageProps)
         {appointments.length === 0 && <p className="pt-6 text-body text-ink-muted">{t("emptyWeek")}</p>}
       </main>
 
-      <Button asChild variant="fab" className="fixed right-gutter bottom-[calc(64px+16px)] z-30 pr-[22px] pl-[18px] lg:hidden">
-        <Link href={newHref(today)}>
-          <Plus strokeWidth={1.6} aria-hidden="true" />
-          {t("newAppointment")}
-        </Link>
-      </Button>
+      <NavButton href={newHref(today)} variant="fab" icon={<Plus strokeWidth={1.6} aria-hidden="true" />} className="fixed right-gutter bottom-[calc(64px+16px)] z-30 pr-[22px] pl-[18px] lg:hidden">
+        {t("newAppointment")}
+      </NavButton>
     </div>
   );
 };

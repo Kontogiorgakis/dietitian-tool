@@ -3,8 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ClientList, ClientTable } from "@/components/metro/client-list";
 import { ClientSearch } from "@/components/metro/client-search";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/navigation";
+import { NavButton } from "@/components/metro/nav-button";
 import { listClients } from "@/lib/metro/queries";
 import { BasePageProps } from "@/types/page-props";
 
@@ -28,12 +27,9 @@ const ClientsPage = async ({ params, searchParams }: ClientsPageProps) => {
         </div>
         <div className="flex items-center gap-4">
           <ClientSearch initialQuery={q} className="w-full lg:w-[360px]" />
-          <Button asChild className="hidden lg:inline-flex">
-            <Link href="/clients/new">
-              <Plus strokeWidth={1.6} aria-hidden="true" />
-              {t("newClient")}
-            </Link>
-          </Button>
+          <NavButton href="/clients/new" icon={<Plus strokeWidth={1.6} aria-hidden="true" />} className="hidden lg:inline-flex">
+            {t("newClient")}
+          </NavButton>
         </div>
       </header>
 
@@ -45,12 +41,9 @@ const ClientsPage = async ({ params, searchParams }: ClientsPageProps) => {
         <ClientTable clients={clients} query={q} />
       </main>
 
-      <Button asChild variant="fab" className="fixed right-gutter bottom-[calc(64px+16px)] z-30 pr-[22px] pl-[18px] lg:hidden">
-        <Link href="/clients/new">
-          <Plus strokeWidth={1.6} aria-hidden="true" />
-          {t("newClient")}
-        </Link>
-      </Button>
+      <NavButton href="/clients/new" variant="fab" icon={<Plus strokeWidth={1.6} aria-hidden="true" />} className="fixed right-gutter bottom-[calc(64px+16px)] z-30 pr-[22px] pl-[18px] lg:hidden">
+        {t("newClient")}
+      </NavButton>
     </div>
   );
 };
