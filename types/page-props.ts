@@ -9,3 +9,14 @@ export interface BasePageProps {
 export interface BaseLayoutProps extends BasePageProps {
   children?: ReactNode;
 }
+
+export interface ClientPageProps {
+  params: Promise<{
+    locale: string;
+    id: string;
+  }>;
+}
+
+export interface ClientLayoutProps extends ClientPageProps {
+  children?: ReactNode;
+}

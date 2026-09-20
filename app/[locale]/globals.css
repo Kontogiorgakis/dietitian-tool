@@ -1,12 +1,119 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Dark mode is an attribute, not a class: <html data-theme="dark">. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-roboto);
+  /* ── Μέτρο color tokens ── */
+  --color-surface-page: var(--surface-page);
+  --color-surface-raised: var(--surface-raised);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-field: var(--surface-field);
+  --color-hairline: var(--hairline);
+  --color-border-field: var(--border-field);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-soft: var(--ink-soft);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-soft: var(--accent-soft);
+  --color-on-accent: var(--on-accent);
+  --color-focus: var(--focus);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-chip: var(--neutral-chip);
+  --color-series-primary: var(--series-primary);
+  --color-series-secondary: var(--series-secondary);
+  --color-chart-grid: var(--chart-grid);
+  --color-chart-band: var(--chart-band);
+  --color-chart-reference: var(--chart-reference);
+
+  /* ── Tints: color for chips, tiles and cards (added 2026-09-20 at Manos' request) ── */
+  --color-tint-sage: var(--accent);
+  --color-tint-sage-soft: var(--accent-soft);
+  --color-tint-teal: var(--tint-teal);
+  --color-tint-teal-soft: var(--tint-teal-soft);
+  --color-tint-sand: var(--tint-sand);
+  --color-tint-sand-soft: var(--tint-sand-soft);
+  --color-tint-clay: var(--warn);
+  --color-tint-clay-soft: var(--warn-soft);
+
+  /* ── shadcn semantic names, pointed at the Μέτρο tokens ── */
+  --color-background: var(--surface-page);
+  --color-foreground: var(--ink);
+  --color-card: var(--surface-raised);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--surface-raised);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--accent-strong);
+  --color-primary-foreground: var(--on-accent);
+  --color-secondary: var(--surface-raised);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--surface-field);
+  --color-muted-foreground: var(--ink-muted);
+  --color-accent-foreground: var(--on-accent);
+  --color-destructive: var(--warn);
+  --color-border: var(--hairline);
+  --color-input: var(--border-field);
+  --color-ring: var(--focus);
+
+  /* ── Type: one family, Source Sans 3 ── */
+  --font-sans: var(--font-source-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --text-caption: 12px;
+  --text-caption--line-height: 16px;
+  --text-label: 13px;
+  --text-label--line-height: 18px;
+  --text-label--letter-spacing: 0.01em;
+  --text-label--font-weight: 500;
+  --text-body: 15px;
+  --text-body--line-height: 22px;
+  --text-title-m: 17px;
+  --text-title-m--line-height: 24px;
+  --text-title-m--font-weight: 600;
+  --text-title-l: 22px;
+  --text-title-l--line-height: 28px;
+  --text-title-l--font-weight: 600;
+  --text-display: 26px;
+  --text-display--line-height: 32px;
+  --text-display--letter-spacing: -0.01em;
+  --text-display--font-weight: 600;
+  --text-num-s: 15px;
+  --text-num-s--line-height: 20px;
+  --text-num-s--font-weight: 600;
+  --text-num-m: 18px;
+  --text-num-m--line-height: 24px;
+  --text-num-m--font-weight: 600;
+  --text-num-l: 30px;
+  --text-num-l--line-height: 34px;
+  --text-num-l--letter-spacing: -0.01em;
+  --text-num-l--font-weight: 600;
+  --text-num-xl: 44px;
+  --text-num-xl--line-height: 44px;
+  --text-num-xl--letter-spacing: -0.02em;
+  --text-num-xl--font-weight: 600;
+
+  /* ── Radii ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* ── Shadows: the only two in the system ── */
+  --shadow-fab: var(--shadow-fab);
+  --shadow-sheet: var(--shadow-sheet);
+
+  /* ── Named layout sizes (the 4px scale is Tailwind's default) ── */
+  --spacing-tap: 48px;
+  --spacing-field: 48px;
+  --spacing-row: 72px;
+  --spacing-gutter: 20px;
+  --spacing-rail: 320px;
+  --container-content: 760px;
+
+  /* ── Breakpoints: rail at 1024 (lg), two content columns at 1200 (split) ── */
+  --breakpoint-split: 1200px;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -15,96 +122,74 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-
-  --sidebar: var(--background);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: var(--accent);
-  --sidebar-accent-foreground: var(--accent-foreground);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--ring);
+  --surface-page: #faf7f2;
+  --surface-raised: #fffdf9;
+  --surface-sunken: #f2ece2;
+  --surface-field: #f4efe6;
+  --hairline: #e7e1d6;
+  --border-field: #8b8173;
+  --ink: #1f2529;
+  --ink-muted: #55605c;
+  --ink-soft: #66716c;
+  --accent: #4f6f58;
+  --accent-strong: #3f5c48;
+  --accent-soft: #e4ece4;
+  --on-accent: #fbfaf6;
+  --focus: #35564a;
+  --warn: #8c5238;
+  --warn-soft: #f6ece4;
+  --neutral-chip: #eeeae2;
+  --chart-reference: #8c8375;
+  --series-primary: var(--accent);
+  --series-secondary: #3f6b72;
+  --chart-grid: var(--hairline);
+  --chart-band: var(--accent-soft);
+  --shadow-fab: 0 2px 10px rgba(31, 37, 41, 0.16);
+  --shadow-sheet: 0 -2px 16px rgba(31, 37, 41, 0.1);
+  --tint-teal: #3f6b72;
+  --tint-teal-soft: #dfeaec;
+  --tint-sand: #8a6a1f;
+  --tint-sand-soft: #f3ead3;
+  /* shadcn sidebar, on the Μέτρο tokens (so the dark theme follows automatically) */
+  --sidebar: var(--surface-raised);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--accent-strong);
+  --sidebar-primary-foreground: var(--on-accent);
+  --sidebar-accent: var(--accent-soft);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--hairline);
+  --sidebar-ring: var(--focus);
 }
 
-.dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.14 0.04 259.21);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+[data-theme="dark"] {
+  --surface-page: #191714;
+  --surface-raised: #221f1b;
+  --surface-sunken: #111010;
+  --surface-field: #2a2622;
+  --hairline: #302b27;
+  --border-field: #80776c;
+  --ink: #f0ebe3;
+  --ink-muted: #b4ada4;
+  --ink-soft: #9a938b;
+  --accent: #9ec5a8;
+  --accent-strong: #a8cfb1;
+  --accent-soft: #2a3a2e;
+  --on-accent: #16201a;
+  --focus: #a9d2b3;
+  --warn: #e0a488;
+  --warn-soft: #33241c;
+  --neutral-chip: #2b2724;
+  --chart-reference: #8a8078;
+  --series-secondary: #8fc0c6;
+  --shadow-fab: 0 2px 10px rgba(0, 0, 0, 0.55);
+  --shadow-sheet: 0 -2px 16px rgba(0, 0, 0, 0.5);
+  --tint-teal: #8fc0c6;
+  --tint-teal-soft: #22333a;
+  --tint-sand: #d9b96a;
+  --tint-sand-soft: #33301f;
 }
 
 /* ── Prevent layout shift when Radix dialogs open ──
@@ -127,9 +212,27 @@ html body[data-scroll-locked] {
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-hairline;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-surface-page text-ink text-body antialiased;
+  }
+  /* Every interactive element takes a 2px focus ring at 2px offset. */
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+  /* Numbers never jitter and always align. */
+  .text-num-s,
+  .text-num-m,
+  .text-num-l,
+  .text-num-xl {
+    font-variant-numeric: tabular-nums;
+  }
+  /* No spinners on numeric fields: she types a number she just read off a scale. */
+  input[inputmode="decimal"]::-webkit-outer-spin-button,
+  input[inputmode="decimal"]::-webkit-inner-spin-button {
+    appearance: none;
   }
 }
+

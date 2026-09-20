@@ -2,7 +2,7 @@ import { AlertTriangle } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
-import { TypographyH3, TypographyRegular } from "@/components/ui/typography";
+import { TypographyBody, TypographyTitleM } from "@/components/ui/typography";
 import { Link } from "@/lib/i18n/navigation";
 
 interface ErrorPageProps {
@@ -25,12 +25,12 @@ export const ErrorPage = ({
           <div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
             <AlertTriangle className="size-6 text-destructive" />
           </div>
-          <TypographyH3>{title}</TypographyH3>
+          <TypographyTitleM>{title}</TypographyTitleM>
         </CardHeader>
         <CardContent>
-          <TypographyRegular className="text-muted-foreground">
+          <TypographyBody className="text-muted-foreground">
             {description}
-          </TypographyRegular>
+          </TypographyBody>
         </CardContent>
         <CardFooter className="justify-center">
           <Button asChild>

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { buttonVariants } from "@/components/ui/button";
 import { useDialogStore } from "@/lib/stores/dialog-store";
+import { cn } from "@/lib/utils";
 
 export const CONFIRM_DIALOG = "confirm";
 
@@ -19,6 +20,7 @@ interface ConfirmDialogData {
   title: string;
   description: string;
   actionLabel: string;
+  cancelLabel?: string;
 }
 
 export const ConfirmDialog = () => {
@@ -27,7 +29,7 @@ export const ConfirmDialog = () => {
   const onSuccess = useDialogStore((s) => s.onSuccess);
   const closeDialog = useDialogStore((s) => s.closeDialog);
 
-  const { title, description, actionLabel } =
+  const { title, description, actionLabel, cancelLabel } =
     (dialogData as ConfirmDialogData) ?? {};
 
   const handleConfirm = () => {
@@ -48,10 +50,10 @@ export const ConfirmDialog = () => {
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="flex-row justify-center gap-2 sm:justify-center">
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{cancelLabel ?? "Cancel"}</AlertDialogCancel>
           <AlertDialogAction
             onClick={handleConfirm}
-            className={buttonVariants({ variant: "destructive" })}
+            className={cn(buttonVariants({ variant: "quiet" }), "bg-transparent hover:bg-transparent")}
           >
             {actionLabel}
           </AlertDialogAction>

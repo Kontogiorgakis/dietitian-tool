@@ -37,7 +37,7 @@ export const ProfileAvatar = ({ user }: ProfileAvatarProps) => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+        <Button variant="quiet" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.image || ""} alt={user.name || "User"} />
             <AvatarFallback className="bg-primary text-primary-foreground">

@@ -30,9 +30,11 @@ const filepath = path.join(dir, filename);
 
 const browser = await puppeteer.launch({ headless: true });
 const page = await browser.newPage();
-await page.setViewport({ width: 1280, height: 800 });
+// SHOT_WIDTH=390 node screenshot.mjs <url> [label] captures the phone breakpoint.
+const width = Number(process.env.SHOT_WIDTH) || 1280;
+await page.setViewport({ width, height: width < 768 ? 844 : 800, deviceScaleFactor: 1 });
 await page.goto(url, { waitUntil: "networkidle2", timeout: 30000 });
-await page.screenshot({ path: filepath, fullPage: false });
+await page.screenshot({ path: filepath, fullPage: process.env.SHOT_FULL === "1" });
 await browser.close();
 
 console.log(filepath);

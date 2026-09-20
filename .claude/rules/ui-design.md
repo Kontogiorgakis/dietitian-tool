@@ -7,6 +7,26 @@ paths:
 
 # UI & Design Rules
 
+## Μέτρο design system (binding, decided 2026-09-20)
+
+The app implements the Μέτρο design system (tokens in `app/[locale]/globals.css`, screen map at https://claude.ai/artifact/N41vS6eWsH8werYHZZjHUm). Where its rules and the generic rules below disagree, **the design system wins**:
+
+- **Lucide icons everywhere, at the system's metrics** (decided 2026-09-20, reversing an earlier exception): every field label, section header, stat tile, chart title and Προσοχή row carries one. `strokeWidth={1.6}`, `size-3.5` inline in labels, `size-5` in section headers, `size-6` in screen headers, `currentColor`.
+- **Charts are shadcn charts** (`components/ui/chart.tsx`, Recharts): `ChartContainer` + `LineChart`, colors as `var(--series-primary)` / `var(--series-secondary)`, band via `ReferenceArea`, target via dashed `ReferenceLine`, lazy-loaded with `ssr: false` through `metro-line-chart-lazy.tsx`. The server computes a plain `ChartSpec` (`chart-spec.ts`); no hand-drawn SVG charts.
+- **Tints (added 2026-09-20 at Manos' request, the system alone read as pale):** `tint-sage`, `tint-teal`, `tint-sand`, `tint-clay` with `-soft` grounds, in `globals.css` and `lib/metro/tones.ts`. Used for card icon chips (`SectionCard tone`), tinted stat tiles (`StatTile tone`), chart cards (weight sage, composition teal, waist sand), the dashboard hero band, and initials avatars (`UserAvatar`) in every list. Clay stays reserved for Προσοχή. Still no red, no gradients.
+- **No red anywhere.** There is no destructive Button variant. `warn` (clay) appears only in the Προσοχή block.
+- **Dark mode is an attribute:** `<html data-theme="dark">` via next-themes `attribute="data-theme"`, and `@custom-variant dark` targets it. Not the `.dark` class.
+- **Button variants are `default` (primary), `secondary`, `quiet`, `fab`.** Sizes `default` (tap-target, 48px), `sm`, `icon`.
+- **Type scale classes:** `text-caption`, `text-label`, `text-body`, `text-title-m`, `text-title-l`, `text-display`, and `text-num-s|m|l|xl` for numbers only (tabular figures are applied automatically). Never `uppercase` on Greek text.
+- **Breakpoints:** `lg` (1024) shows the client rail, `split` (1200) splits a screen into two content columns. Nothing in between.
+- **Copy is Greek, sentence case, no emoji, no exclamation marks, and describes movement, never a verdict.** Decimal comma via `formatNum` in `lib/metro/format.ts`.
+- **The starter's landing page, admin panel and todo demo are gone.** The home route is Πελάτες. No auth gate for now (NextAuth wiring stays).
+- **Navigation (decided 2026-09-20):** every screen except presentation mode lives in the `(app)` route group, whose layout renders the shadcn `Sidebar` (`components/metro/app-sidebar.tsx`, breakpoint moved to 1024 in `components/ui/sidebar.tsx` and `hooks/use-mobile.ts`) and the `BottomTabBar` (top-level routes only, so it never stacks with a sticky action bar). The sidebar lists every client as a collapsible tree (`listClientNames()` from the `(app)` layout); the open client comes from the pathname, no store. Actions that add or rename clients revalidate `"/[locale]"` as a `layout` so the tree refreshes. The sidebar's CSS variables in `globals.css` point at the Μέτρο tokens; never paste the CLI's hsl defaults back.
+- **Screens are built from `SectionCard`s (`components/metro/section-card.tsx`, on shadcn Card, no shadow):** icon, title, one subtitle line that explains the section, then the content. Numbers get words: the Καρτέλα writes a summary sentence from the measurements and every stat tile carries a sub-line (`sub`). The home route is Αρχική (`(app)/page.tsx`, data from `lib/metro/dashboard.ts`); the client list is `/clients`.
+- **Scrolling goes through shadcn `ScrollArea` everywhere** (decided 2026-09-20): the `(app)` layout constrains `SidebarInset` to `h-svh overflow-hidden` and scrolls the page in `<ScrollArea className="h-0 flex-1" viewportClassName="!overflow-y-scroll">`; the sidebar tree and presentation mode do the same. Sticky bars and the tab-bar spacer live inside the viewport. `components/ui/scroll-area.tsx` takes `viewportClassName` for this.
+- **`cn()` knows the named sizes** (`tap`, `field`, `row`, `gutter`, `rail`) as spacing, so `size-8` can override `size-tap`. Add any new named size to `SPACING` in `lib/general/utils.ts`.
+- **shadcn CLI overwrites:** `shadcn add` rewrites `button.tsx`, `input.tsx` and injects variables into `globals.css`. After any `add`, diff `components/ui/` and `globals.css` and restore the Μέτρο versions (they are in git once committed; until then, from this file's descriptions).
+
 ## Component sourcing
 
 - **Always use the frontend-design plugin** for any design or UI task.
@@ -67,7 +87,7 @@ Radix's Viewport uses `display: table` internally, which breaks height calculati
 
 ## Styling
 
-- CSS variables live in `app/[locale]/globals.css` (including brand colors like `--forest`, `--leaf`, `--cream`). Dark mode via `next-themes`, class strategy, `@custom-variant dark (&:is(.dark *))`.
+- CSS variables live in `app/[locale]/globals.css` (the Μέτρο tokens). Dark mode via `next-themes` with `attribute="data-theme"`, see the Μέτρο section above.
 - **Semantic tokens only:** `text-foreground`, `bg-background`. Never raw color values. New brand colors become CSS variables with semantic names, referenced as `bg-forest` or `text-leaf`.
 - **Tailwind 4 canonical class names:** `z-100` not `z-[100]`, `bg-linear-to-t` not `bg-gradient-to-t`.
 - **Transitions use `transition-all duration-300` or `transition-colors`** on interactive elements, so nothing changes state abruptly. Animate `transform` and `opacity` only, never width/height/top/left.

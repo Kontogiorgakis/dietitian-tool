@@ -1,6 +1,3 @@
-// This file redirects to the actual schema location
-// The actual schema is at lib/db/schema.prisma
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-3.0.x", "linux-musl-openssl-3.0.x"]
@@ -19,22 +16,108 @@ model User {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  todos         Todo[]
-
   @@map("users")
 }
 
-model Todo {
+enum Sex {
+  FEMALE
+  MALE
+  OTHER
+}
+
+/// Direction is judged against the goal, not against zero: a client who wants to
+/// gain weight gets the accent for a positive change.
+enum GoalDirection {
+  LOSE
+  GAIN
+  MAINTAIN
+}
+
+model Client {
+  id        String   @id @default(cuid())
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  sex       Sex
+  birthDate DateTime @map("birth_date") @db.Date
+  heightCm  Float    @map("height_cm")
+  phone     String
+  email     String?
+
+  // Step 2, Ιστορικό. Can be filed later, which leaves historyCompleted false.
+  goalText         String?       @map("goal_text")
+  targetWeightKg   Float?        @map("target_weight_kg")
+  goalDirection    GoalDirection @default(LOSE) @map("goal_direction")
+  activityLevel    String?       @map("activity_level")
+  medicalHistory   String?       @map("medical_history")
+  medication       String?
+  allergies        String?
+  intolerances     String?
+  conditions       String?
+  dietPreferences  String?       @map("diet_preferences")
+  habits           String?
+  historyCompleted Boolean       @default(false) @map("history_completed")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  measurements Measurement[]
+  appointments Appointment[]
+
+  @@index([lastName, firstName])
+  @@map("clients")
+}
+
+/// One visit. A draft is the autosaved form in progress; saving the visit clears the flag.
+model Measurement {
+  id        String   @id @default(cuid())
+  clientId  String   @map("client_id")
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  visitedAt DateTime @default(now()) @map("visited_at")
+  draft     Boolean  @default(true)
+
+  weightKg Float? @map("weight_kg")
+
+  waistCm Float? @map("waist_cm")
+  hipCm   Float? @map("hip_cm")
+  chestCm Float? @map("chest_cm")
+  armCm   Float? @map("arm_cm")
+  thighCm Float? @map("thigh_cm")
+
+  bodyFatPct Float? @map("body_fat_pct")
+  leanMassKg Float? @map("lean_mass_kg")
+  waterPct   Float? @map("water_pct")
+
+  skinfoldBicepsMm      Float? @map("skinfold_biceps_mm")
+  skinfoldTricepsMm     Float? @map("skinfold_triceps_mm")
+  skinfoldSubscapularMm Float? @map("skinfold_subscapular_mm")
+  skinfoldSuprailiacMm  Float? @map("skinfold_suprailiac_mm")
+
+  bloodPressure String? @map("blood_pressure")
+  pulseBpm      Int?    @map("pulse_bpm")
+
+  note String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([clientId, visitedAt])
+  @@map("measurements")
+}
+
+/// A booked visit in the practice's calendar. Independent of measurements: a
+/// visit that happened is a Measurement, a visit that is planned is an Appointment.
+model Appointment {
   id          String   @id @default(cuid())
-  title       String
-  description String?
-  completed   Boolean  @default(false)
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  clientId    String   @map("client_id")
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  startsAt    DateTime @map("starts_at")
+  durationMin Int      @default(45) @map("duration_min")
+  note        String?
 
-  userId      String   @map("user_id")
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@index([userId])
-  @@map("todos")
+  @@index([startsAt])
+  @@index([clientId])
+  @@map("appointments")
 }

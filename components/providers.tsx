@@ -1,7 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { AbstractIntlMessages,NextIntlClientProvider } from "next-intl";
+import { AbstractIntlMessages, NextIntlClientProvider } from "next-intl";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { DialogProvider } from "@/components/dialog-provider";
@@ -18,15 +18,13 @@ export const Providers = ({ children, messages, locale }: Props) => {
   return (
     <SessionProvider>
       <NextThemesProvider
-        attribute="class"
+        attribute="data-theme"
         defaultTheme="system"
         enableSystem
         disableTransitionOnChange
       >
-        <NextIntlClientProvider messages={messages} locale={locale}>
-          <TooltipProvider>
-            {children}
-          </TooltipProvider>
+        <NextIntlClientProvider messages={messages} locale={locale} timeZone="Europe/Athens">
+          <TooltipProvider>{children}</TooltipProvider>
           <DialogProvider />
           <Toaster />
         </NextIntlClientProvider>

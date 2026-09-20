@@ -7,7 +7,8 @@ declare global {
 }
 
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL!,
+  // DATABASE_URL is the pooled string for production; DIRECT_URL alone is enough in development.
+  connectionString: (process.env.DATABASE_URL ?? process.env.DIRECT_URL)!,
 });
 
 export const prisma =
