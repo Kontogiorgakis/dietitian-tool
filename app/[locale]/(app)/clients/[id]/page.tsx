@@ -8,6 +8,7 @@ import { NavButton } from "@/components/metro/nav-button";
 import { BackLink, StickyBar } from "@/components/metro/screen-chrome";
 import { SectionCard } from "@/components/metro/section-card";
 import { StatTile } from "@/components/metro/stat-tile";
+import { StatementList } from "@/components/metro/statement-list";
 import { Link } from "@/lib/i18n/navigation";
 import { bmi } from "@/lib/metro/calc";
 import { ageAt, formatChange, formatDate, formatDayMonth, formatNum, formatTime, fullName } from "@/lib/metro/format";
@@ -22,13 +23,17 @@ interface FactProps {
   value: string | null;
 }
 
-/** One line of the profile card: icon, label, value; "—" when unknown. */
+/** One line of the profile card: icon, label, value; "—" when unknown. Truncated (with the
+ *  full value in a tooltip) since an email or a long free-typed activity note has no spaces
+ *  to wrap at and would otherwise overflow into the next column of the grid. */
 const Fact = ({ icon: Icon, label, value }: FactProps) => (
   <div className="flex items-start gap-2.5 py-1.5">
     <Icon className="mt-1 size-4 shrink-0 text-ink-muted" strokeWidth={1.6} />
     <span className="flex min-w-0 flex-col">
       <span className="text-caption text-ink-muted">{label}</span>
-      <span className={cn("text-body", value ? "text-ink" : "text-ink-soft")}>{value ?? "—"}</span>
+      <span className={cn("truncate text-body", value ? "text-ink" : "text-ink-soft")} title={value ?? undefined}>
+        {value ?? "—"}
+      </span>
     </span>
   </div>
 );
@@ -90,7 +95,7 @@ const ClientDetailPage = async ({ params }: ClientPageProps) => {
         <div className="hidden gap-2 split:flex">{actions}</div>
       </div>
 
-      <main className="grid gap-4 px-gutter pb-6 lg:gap-6 lg:px-10 lg:pb-10 split:grid-cols-[minmax(0,1fr)_minmax(440px,50%)]">
+      <main className="grid grid-cols-1 gap-4 px-gutter pb-6 lg:gap-6 lg:px-10 lg:pb-10 split:grid-cols-[minmax(0,1fr)_minmax(440px,50%)]">
         {/* Reading column */}
         <div className="flex min-w-0 flex-col gap-4 lg:gap-6">
           <SectionCard
@@ -110,7 +115,7 @@ const ClientDetailPage = async ({ params }: ClientPageProps) => {
                   <Target className="size-3.5" strokeWidth={1.6} aria-hidden="true" />
                   {t("goal")}
                 </p>
-                <p className="text-body font-semibold text-ink">{client.goalText ?? t("noGoal")}</p>
+                <p className="text-body font-semibold text-ink break-words">{client.goalText ?? t("noGoal")}</p>
                 <p className="text-caption text-ink-muted">
                   {directionLabel}
                   {client.targetWeightKg !== null && ` · ${t("targetWeight", { weight: formatNum(client.targetWeightKg) })}`}
@@ -129,7 +134,7 @@ const ClientDetailPage = async ({ params }: ClientPageProps) => {
           </SectionCard>
 
           <SectionCard icon={ChartLine} tone="teal" title={t("progress")} subtitle={t("progressSubtitle")}>
-            <p className="pb-4 text-body text-ink">{summary}</p>
+            <StatementList lines={summary} className="pb-4" />
             <div className="grid grid-cols-2 gap-3 min-[1440px]:grid-cols-4">
               <StatTile icon={Scale} tone="sage" label={t("tiles.currentWeight")} value={currentWeight === null ? null : formatNum(currentWeight)} unit="kg" sub={previous ? t("vsPrevious", { value: delta(latest?.weightKg ?? null, previous.weightKg) ?? "—" }) : undefined} />
               <StatTile icon={TrendingDown} label={t("tiles.sinceStart")} value={change === null ? null : formatChange(change)} unit="kg" towardGoal={towardGoal} sub={first ? t("since", { date: formatDayMonth(first.visitedAt) }) : undefined} />
@@ -138,7 +143,7 @@ const ClientDetailPage = async ({ params }: ClientPageProps) => {
             </div>
           </SectionCard>
 
-          <div className="grid gap-4 lg:gap-6 xl:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:gap-6 xl:grid-cols-2">
             <SectionCard icon={Asterisk} title={t("attention.title")} subtitle={t("attentionSubtitle")} tone="clay">
               <dl className="flex flex-col">
                 {[
@@ -200,7 +205,7 @@ const ClientDetailPage = async ({ params }: ClientPageProps) => {
                       <td className={cn(td, "text-right text-num-s group-last:border-b-0")}>{formatNum(m.weightKg)}</td>
                       <td className={cn(td, "text-right text-num-s group-last:border-b-0")}>{formatNum(m.bodyFatPct)}</td>
                       <td className={cn(td, "text-right text-num-s group-last:border-b-0")}>{formatNum(m.waistCm)}</td>
-                      <td className={cn(td, "hidden pl-4 text-body text-ink-muted sm:table-cell group-last:border-b-0")}>{m.note ?? "—"}</td>
+                      <td className={cn(td, "hidden max-w-60 pl-4 text-body text-ink-muted break-words sm:table-cell group-last:border-b-0")}>{m.note ?? "—"}</td>
                     </tr>
                   ))}
                 </tbody>

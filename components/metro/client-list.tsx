@@ -6,6 +6,8 @@ import { LinkPending } from "@/components/metro/nav-button";
 import { UserAvatar } from "@/components/user-avatar";
 import { Link } from "@/lib/i18n/navigation";
 import { formatDayMonth, formatNum } from "@/lib/metro/format";
+import { HOVER_ROW, HOVER_ROW_CELL, HOVER_ROW_LINK, HOVER_ROW_TINT } from "@/lib/metro/row-hover";
+import { cn } from "@/lib/utils";
 import type { ClientSummary } from "@/types/metro";
 
 interface ClientListProps {
@@ -72,9 +74,9 @@ export const ClientTable = ({ clients, query }: ClientListProps) => {
         </thead>
         <tbody>
           {clients.map((c) => (
-            <tr key={c.id} className="group relative transition-colors duration-300 hover:bg-accent-soft focus-within:bg-accent-soft">
-              <td className="border-b border-hairline py-2.5 pr-3 group-hover:border-transparent">
-                <Link href={`/clients/${c.id}`} className="flex min-h-11 items-center gap-3 text-ink after:absolute after:inset-0 after:content-['']">
+            <tr key={c.id} className={HOVER_ROW}>
+              <td className={cn(HOVER_ROW_CELL, HOVER_ROW_TINT, "pr-3")}>
+                <Link href={`/clients/${c.id}`} className={cn("flex min-h-11 items-center gap-3 text-ink", HOVER_ROW_LINK)}>
                   <UserAvatar name={c.name} size="md" />
                   <span className="flex flex-col gap-0.5">
                     <span className="text-body font-semibold">{c.name}</span>
@@ -82,12 +84,12 @@ export const ClientTable = ({ clients, query }: ClientListProps) => {
                   </span>
                 </Link>
               </td>
-              <td className="border-b border-hairline px-3 py-2.5 text-body group-hover:border-transparent">{c.lastVisit ? formatDayMonth(c.lastVisit) : "—"}</td>
-              <td className="border-b border-hairline px-3 py-2.5 text-right text-num-s group-hover:border-transparent">{c.visitCount}</td>
-              <td className="border-b border-hairline px-3 py-2.5 text-right group-hover:border-transparent">
+              <td className={cn(HOVER_ROW_CELL, "px-3 text-body")}>{c.lastVisit ? formatDayMonth(c.lastVisit) : "—"}</td>
+              <td className={cn(HOVER_ROW_CELL, "px-3 text-right text-num-s")}>{c.visitCount}</td>
+              <td className={cn(HOVER_ROW_CELL, "px-3 text-right")}>
                 <ChangeBadge changeKg={c.changeKg} towardGoal={c.towardGoal} />
               </td>
-              <td className="w-8 border-b border-hairline py-2.5 pl-3 text-right text-ink-muted group-hover:border-transparent">
+              <td className={cn(HOVER_ROW_CELL, "w-8 pl-3 text-right text-ink-muted")}>
                 <ChevronRight className="ml-auto size-5" strokeWidth={1.6} aria-hidden="true" />
               </td>
             </tr>

@@ -31,16 +31,34 @@ interface DotProps {
   index?: number;
 }
 
+interface EndLabel {
+  text: string;
+  /** Beside the point, in the right margin; or inside the plot, on the side the line leaves free (two-axis charts, where the margin holds the second axis). */
+  placement: "beside" | "inside";
+  /** Whether the line rises into its last point (arriving from the lower left), so an inside label goes above it. */
+  rising: boolean;
+}
+
 /** A point at every visit, the last one filled and labelled with its value. */
-const seriesDot = (color: string, lastIndex: number, endLabel: string) => {
+const seriesDot = (color: string, lastIndex: number, endLabel: EndLabel) => {
   const Dot = ({ cx = 0, cy = 0, index = 0 }: DotProps) => {
     const last = index === lastIndex;
+    const beside = endLabel.placement === "beside";
+    const insideY = endLabel.rising ? cy - 10 : cy + 19;
     return (
       <g key={index}>
         <circle cx={cx} cy={cy} r={last ? 4.5 : 3.5} fill={last ? color : "var(--surface-page)"} stroke={color} strokeWidth={2} />
         {last && (
-          <text x={cx + 8} y={cy + 4} fill={color} fontSize={14} fontWeight={600} className="tabular-nums">
-            {endLabel}
+          <text
+            x={beside ? cx + 8 : cx - 2}
+            y={beside ? cy + 4 : insideY}
+            textAnchor={beside ? "start" : "end"}
+            fill={color}
+            fontSize={14}
+            fontWeight={600}
+            className="tabular-nums"
+          >
+            {endLabel.text}
           </text>
         )}
       </g>
@@ -50,15 +68,23 @@ const seriesDot = (color: string, lastIndex: number, endLabel: string) => {
 };
 
 export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
-  const { points, series, band, reference, compact } = spec;
+  const { points, series, band, reference, compact, sharedAxis = false } = spec;
   const labelOf = new Map(points.map((p) => [p.day, p.label]));
   const lastIndex = points.length - 1;
   const config = Object.fromEntries(series.map((s) => [s.key, { label: s.name, color: s.color }])) satisfies ChartConfig;
   const primary = series[0];
+  // Two axes: the right margin belongs to the second axis, so the end labels move inside the plot.
+  const axes = sharedAxis ? [primary] : series;
+  const twoAxes = axes.length > 1;
+  const endLabelOf = (s: (typeof series)[number]): EndLabel => ({
+    text: s.endLabel,
+    placement: twoAxes ? "inside" : "beside",
+    rising: points.length > 1 && (points[lastIndex][s.key] ?? 0) > (points[lastIndex - 1][s.key] ?? 0),
+  });
 
   return (
     <ChartContainer config={config} className={cn("aspect-auto h-full w-full", className)} aria-label={spec.ariaLabel}>
-      <LineChart data={points} margin={{ top: 12, right: 52, bottom: 0, left: 0 }}>
+      <LineChart data={points} margin={{ top: 12, right: twoAxes ? 8 : 52, bottom: 0, left: 0 }}>
         <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
         <XAxis
           dataKey="day"
@@ -71,7 +97,7 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
           tickMargin={8}
           tick={{ fill: "var(--ink-soft)", fontSize: 14 }}
         />
-        {series.map((s) => (
+        {axes.map((s) => (
           <YAxis
             key={s.key}
             yAxisId={s.key}
@@ -82,7 +108,7 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
             tickLine={false}
             axisLine={false}
             width={s.key === "a" ? 42 : 38}
-            tick={{ fill: s.color === "var(--series-primary)" && series.length === 1 ? "var(--ink-soft)" : s.color, fontSize: 14 }}
+            tick={{ fill: twoAxes ? s.color : "var(--ink-soft)", fontSize: 14 }}
           />
         ))}
         {band && (
@@ -128,13 +154,13 @@ export const MetroLineChart = ({ spec, className }: MetroLineChartProps) => {
         {series.map((s) => (
           <Line
             key={s.key}
-            yAxisId={s.key}
+            yAxisId={sharedAxis ? "a" : s.key}
             dataKey={s.key}
             type="linear"
             stroke={s.color}
             strokeWidth={2.5}
             strokeLinecap="round"
-            dot={seriesDot(s.color, lastIndex, s.endLabel)}
+            dot={seriesDot(s.color, lastIndex, endLabelOf(s))}
             activeDot={{ r: 5, fill: s.color, stroke: "var(--surface-page)", strokeWidth: 2 }}
             isAnimationActive={false}
           />

@@ -1,6 +1,5 @@
 import type { Client, Measurement } from "@prisma/client";
 import type { getTranslations } from "next-intl/server";
-import { Fragment } from "react";
 
 import { isTowardGoal, remainingToTarget } from "@/lib/metro/calc";
 import { formatChange, formatDayMonth, formatNum } from "@/lib/metro/format";
@@ -49,19 +48,18 @@ export const progressFacts = (client: Pick<Client, "goalDirection" | "targetWeig
   };
 };
 
-/** The sentence the app writes from the data: movement, never a verdict. The numbers that matter are bold. */
-export const progressSummary = (t: DetailTranslator, client: Pick<Client, "targetWeightKg">, facts: ProgressFacts): React.ReactNode => {
+/**
+ * The sentences the app writes from the data, one per line: movement, never a verdict.
+ * The first states the weight since the first visit and leads; the rest add fat, waist and
+ * the distance to the target. The numbers that matter are bold.
+ */
+export const progressSummary = (t: DetailTranslator, client: Pick<Client, "targetWeightKg">, facts: ProgressFacts): React.ReactNode[] => {
   const { first, currentWeight, change, latestFat, firstFat, latestWaist, firstWaist, remaining, visits } = facts;
-  if (!first) return t("summary.none");
-  if (change === null) return t.rich("summary.one", { ...RICH, date: formatDayMonth(first.visitedAt), weight: formatNum(first.weightKg) });
+  if (!first) return [t("summary.none")];
+  if (change === null) return [t.rich("summary.one", { ...RICH, date: formatDayMonth(first.visitedAt), weight: formatNum(first.weightKg) })];
   const parts: React.ReactNode[] = [t.rich("summary.progress", { ...RICH, since: formatDayMonth(first.visitedAt), visits: t("visits", { count: visits.length }), change: formatChange(change), first: formatNum(first.weightKg), last: formatNum(currentWeight) })];
   if (firstFat !== null) parts.push(t.rich("summary.fat", { ...RICH, fatFirst: formatNum(firstFat), fatLast: formatNum(latestFat) }));
   if (firstWaist !== null) parts.push(t.rich("summary.waist", { ...RICH, waistFirst: formatNum(firstWaist), waistLast: formatNum(latestWaist) }));
   if (remaining !== null && client.targetWeightKg !== null) parts.push(t.rich("summary.remaining", { ...RICH, remaining: formatNum(remaining), target: formatNum(client.targetWeightKg) }));
-  return parts.map((part, i) => (
-    <Fragment key={i}>
-      {i > 0 && " "}
-      {part}
-    </Fragment>
-  ));
+  return parts;
 };

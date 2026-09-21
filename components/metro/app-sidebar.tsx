@@ -1,10 +1,10 @@
 "use client";
 
-import { CalendarDays, ChevronRight, ClipboardList, House, type LucideIcon, NotebookText, Plus, Presentation, Settings, SquarePen, UserRound, Users } from "lucide-react";
+import { CalendarDays, ChevronRight, ClipboardList, House, Loader2, type LucideIcon, NotebookText, Plus, Presentation, Settings, SquarePen, UserRound, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
-import { LinkPending } from "@/components/metro/nav-button";
+import { LinkPending, LinkPendingWatcher } from "@/components/metro/nav-button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -12,9 +12,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupAction,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -23,7 +21,9 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
+  SidebarSeparator,
   SidebarTrigger,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { UserAvatar } from "@/components/user-avatar";
 import { Link, usePathname } from "@/lib/i18n/navigation";
@@ -45,11 +45,13 @@ const NavList = ({ items, pathname }: { items: NavItem[]; pathname: string }) =>
   <SidebarMenu>
     {items.map((item) => (
       <SidebarMenuItem key={item.href}>
-        <SidebarMenuButton asChild isActive={item.active(pathname)} tooltip={item.label} className="h-12 gap-3 px-3 text-body [&>svg]:size-5 data-[active=true]:text-accent-strong [&[data-active=true]>svg]:text-accent">
+        <SidebarMenuButton asChild isActive={item.active(pathname)} tooltip={item.label} className="h-12 gap-3 px-3 text-body group-data-[collapsible=icon]:justify-center [&>svg]:size-5 data-[active=true]:text-accent-strong [&[data-active=true]>svg]:text-accent">
           <Link href={item.href}>
             <item.icon strokeWidth={1.6} aria-hidden="true" />
-            <span>{item.label}</span>
-            <LinkPending className="ml-auto" />
+            {/* Hidden (not just clipped) when collapsed: left in the flex row, it still reserves
+                its gap even at zero width, which was eating the space meant to center the icon. */}
+            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+            <LinkPending className="ml-auto group-data-[collapsible=icon]:hidden" />
           </Link>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -60,15 +62,84 @@ const NavList = ({ items, pathname }: { items: NavItem[]; pathname: string }) =>
 /** The client the pathname is inside, if any. */
 const clientIdOf = (pathname: string): string | null => /^\/clients\/([^/]+)/.exec(pathname)?.[1] ?? null;
 
+interface ClientNavItemProps {
+  client: { id: string; name: string };
+  items: NavItem[];
+  isCurrent: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  pathname: string;
+}
+
+/**
+ * One client's row in the sidebar tree: avatar, name (a link), and a trailing chevron
+ * that opens the tree. While the name link is navigating, the chevron is replaced by a
+ * spinner instead of a spinner appearing alongside it.
+ */
+const ClientNavItem = ({ client, items, isCurrent, open, onOpenChange, pathname }: ClientNavItemProps) => {
+  const [pending, setPending] = useState(false);
+
+  return (
+    <Collapsible asChild open={open} onOpenChange={onOpenChange}>
+      <SidebarMenuItem>
+        <SidebarMenuButton asChild isActive={isCurrent} tooltip={client.name} className="h-12 gap-0 px-3 text-body group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-1!">
+          <div>
+            <Link href={`/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3">
+              <UserAvatar name={client.name} size="md" className="size-8 text-caption group-data-[collapsible=icon]:size-7" />
+              <span className="truncate">{client.name}</span>
+              <LinkPendingWatcher onPending={setPending} />
+            </Link>
+            {/* The chevron sits at the right edge of the row, always visible, and turns down when the
+                tree is open; while the name link above is navigating, a spinner takes its place instead. */}
+            <CollapsibleTrigger asChild>
+              <button
+                type="button"
+                aria-label={client.name}
+                aria-expanded={open}
+                className="ml-auto flex size-7 shrink-0 cursor-pointer items-center justify-center text-ink-muted group-data-[collapsible=icon]:hidden"
+              >
+                {pending ? (
+                  <Loader2 className="size-5 animate-spin text-accent" strokeWidth={1.6} aria-hidden="true" />
+                ) : (
+                  <ChevronRight className={cn("size-5 transition-transform duration-300", open && "rotate-90")} strokeWidth={1.6} aria-hidden="true" />
+                )}
+              </button>
+            </CollapsibleTrigger>
+          </div>
+        </SidebarMenuButton>
+        <CollapsibleContent>
+          <SidebarMenuSub className="mx-5 mt-1 mb-2 gap-1.5 border-hairline py-1 pl-4">
+            {items.map((item) => (
+              <SidebarMenuSubItem key={item.href}>
+                <SidebarMenuSubButton asChild isActive={item.active(pathname)} className="h-10 gap-3 px-3 text-body [&>svg]:size-[18px] data-[active=true]:bg-accent-soft data-[active=true]:text-accent-strong [&[data-active=true]>svg]:text-accent">
+                  <Link href={item.href}>
+                    <item.icon strokeWidth={1.6} aria-hidden="true" />
+                    <span>{item.label}</span>
+                    <LinkPending className="ml-auto" />
+                  </Link>
+                </SidebarMenuSubButton>
+              </SidebarMenuSubItem>
+            ))}
+          </SidebarMenuSub>
+        </CollapsibleContent>
+      </SidebarMenuItem>
+    </Collapsible>
+  );
+};
+
 /*
- * The app sidebar at 1024 and above: the practice's pages, then every client as a
- * tree. One client is expanded at a time: the one whose screens are open, or the one
+ * The app sidebar at 1024 and above: the practice's pages, a divider, then every client
+ * as a tree. One client is expanded at a time: the one whose screens are open, or the one
  * last opened on its chevron. Presentation mode renders outside the sidebar.
  */
 export const AppSidebar = ({ clients }: AppSidebarProps) => {
   const t = useTranslations("Nav");
   const tCommon = useTranslations("Common");
   const pathname = usePathname();
+  // Collapsed to icon rail: no scrollbar, so its reserved width can't throw off the
+  // centering of the icons below the header (two `!` overflow utilities racing for the
+  // same property is not a reliable way to switch this, so it's driven from state instead).
+  const { state: sidebarState } = useSidebar();
   const currentId = clientIdOf(pathname);
   // One client open at a time. Navigating into a client opens that one and closes the rest.
   const [openId, setOpenId] = useState<string | null>(currentId);
@@ -82,6 +153,8 @@ export const AppSidebar = ({ clients }: AppSidebarProps) => {
     { href: "/", label: t("home"), icon: House, active: (p) => p === "/" },
     { href: "/visits", label: t("visits"), icon: ClipboardList, active: (p) => p.startsWith("/visits") },
     { href: "/appointments", label: t("appointments"), icon: CalendarDays, active: (p) => p.startsWith("/appointments") },
+    // The list and the new-client form; a client's own screens light up that client in the tree instead.
+    { href: "/clients", label: t("clients"), icon: Users, active: (p) => p === "/clients" || p.startsWith("/clients/new") },
   ];
 
   const clientItems = (id: string): NavItem[] => [
@@ -100,73 +173,29 @@ export const AppSidebar = ({ clients }: AppSidebarProps) => {
       </SidebarHeader>
 
       <SidebarContent className="overflow-hidden">
-        <ScrollArea className="h-0 flex-1" viewportClassName="!overflow-y-scroll group-data-[collapsible=icon]:!overflow-hidden">
+        <ScrollArea className="h-0 flex-1" viewportClassName={sidebarState === "collapsed" ? "overflow-hidden" : "!overflow-y-scroll"}>
         <SidebarGroup>
           <SidebarGroupContent>
             <NavList items={appItems} pathname={pathname} />
           </SidebarGroupContent>
         </SidebarGroup>
 
+        <SidebarSeparator className="my-1" />
+
         <SidebarGroup>
-          <SidebarGroupLabel asChild className="h-9 text-label text-ink-muted">
-            <Link href="/clients">
-              <Users className="mr-2 size-4" strokeWidth={1.6} aria-hidden="true" />
-              {t("clients")}
-            </Link>
-          </SidebarGroupLabel>
-          <SidebarGroupAction asChild title={t("newClient")}>
-            <Link href="/clients/new">
-              <Plus strokeWidth={1.6} aria-hidden="true" />
-              <span className="sr-only">{t("newClient")}</span>
-            </Link>
-          </SidebarGroupAction>
           <SidebarGroupContent>
             <SidebarMenu className="gap-2">
-              {clients.map((client) => {
-                const isCurrent = client.id === currentId;
-                const open = openId === client.id;
-                return (
-                  <Collapsible key={client.id} asChild open={open} onOpenChange={(o) => setOpenId(o ? client.id : null)}>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton asChild isActive={isCurrent} tooltip={client.name} className="h-12 gap-0 px-3 text-body group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:p-1!">
-                        <div>
-                          <Link href={`/clients/${client.id}`} className="flex min-w-0 flex-1 items-center gap-3">
-                            <UserAvatar name={client.name} size="md" className="size-8 text-caption group-data-[collapsible=icon]:size-7" />
-                            <span className="truncate">{client.name}</span>
-                            <LinkPending />
-                          </Link>
-                          {/* The chevron sits at the right edge of the row, always visible, and turns down when the tree is open. */}
-                          <CollapsibleTrigger asChild>
-                            <button
-                              type="button"
-                              aria-label={client.name}
-                              aria-expanded={open}
-                              className="ml-auto flex size-7 shrink-0 cursor-pointer items-center justify-center text-ink-muted group-data-[collapsible=icon]:hidden"
-                            >
-                              <ChevronRight className={cn("size-5 transition-transform duration-300", open && "rotate-90")} strokeWidth={1.6} aria-hidden="true" />
-                            </button>
-                          </CollapsibleTrigger>
-                        </div>
-                      </SidebarMenuButton>
-                      <CollapsibleContent>
-                        <SidebarMenuSub className="mx-5 mt-1 mb-2 gap-1.5 border-hairline py-1 pl-4">
-                          {clientItems(client.id).map((item) => (
-                            <SidebarMenuSubItem key={item.href}>
-                              <SidebarMenuSubButton asChild isActive={item.active(pathname)} className="h-10 gap-3 px-3 text-body [&>svg]:size-[18px] data-[active=true]:bg-accent-soft data-[active=true]:text-accent-strong [&[data-active=true]>svg]:text-accent">
-                                <Link href={item.href}>
-                                  <item.icon strokeWidth={1.6} aria-hidden="true" />
-                                  <span>{item.label}</span>
-                                  <LinkPending className="ml-auto" />
-                                </Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </SidebarMenuItem>
-                  </Collapsible>
-                );
-              })}
+              {clients.map((client) => (
+                <ClientNavItem
+                  key={client.id}
+                  client={client}
+                  items={clientItems(client.id)}
+                  isCurrent={client.id === currentId}
+                  open={openId === client.id}
+                  onOpenChange={(o) => setOpenId(o ? client.id : null)}
+                  pathname={pathname}
+                />
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

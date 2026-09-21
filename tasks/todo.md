@@ -99,3 +99,18 @@ Round 3 review: verified at 1280 (dashboard cards, profile card) and at the phon
 - [x] shadcn CLI trap found: sidebar.tsx and select.tsx imported cn from the stray "cn" package, so overrides never merged; fixed and recorded
 - [x] Νέος πελάτης rebuilt: intro text, cards (Ταυτότητα, Επικοινωνία; Στόχος, Ιατρικό, Αλλεργίες, Τρόπος ζωής), required marks and hints, activity as a choice, live preview of the list row
 - [x] Private Vercel deploy: no sitemap, robots disallow, noindex, no metadataBase
+
+## Round 6: more charts from the recorded values, three full demo clients (2026-09-21)
+
+Decided with Manos: chart everything the measurement form already records, on the Καρτέλα and in the presentation, and replace the eight thin demo clients with three whose every field is filled.
+
+- [x] Seed rewritten: three clients (Μαρία, LOSE, 8 visits; Γιώργος, GAIN, 6 visits; Ελένη, MAINTAIN, 5 visits), every history field and every measurement field filled at every visit, skinfold sums consistent with the fat % through Durnin and Womersley, a past appointment per visit and upcoming ones across four weeks, createdAt backdated to the first visit. Re-run deleted every previous client, measurement and appointment, including the hand-made ΓΕΩΠΟΝΙΚΟ ΕΡΕΥΝΑΣ.
+- [x] Waist chart carries the NICE waist-to-height band (0,4 to 0,5 of height, in cm for the client) and its caption states the ratio and the signed change. No separate ratio chart.
+- [x] "Περισσότερες μετρήσεις" card: hip, chest, arm, thigh, water, skinfold sum, blood pressure (both readings on one axis), pulse, each only when measured at two or more visits, each expandable on the Καρτέλα, each with a from-to line in the presentation.
+- [x] Renderer: `sharedAxis` on a spec; two-axis charts keep their end labels inside the plot on the side the line leaves free, so they no longer collide with the right axis.
+- [x] Presentation grid rebalanced (Manos: three in a row was too tight): weight wide on top, composition and waist side by side, small charts four per row. Καρτέλα unchanged: one column, small charts two per row.
+- [x] Composition caption says what fat did and what lean mass did, each with its own direction (it called rising lean mass "falling").
+- [x] Generated sentences one per line (Manos): `StatementList` on the dashboard hero, the Καρτέλα progress card and the presentation hero.
+- [x] Messages el + en, seed run, dev server restarted, tsc, lint, screenshots at 1280 and 390 of the Καρτέλα, the presentation, the dashboard and the calendar.
+
+Round 6 review: verified in the browser at 1280 (Μαρία's Καρτέλα with all eight small charts, Γιώργος's waist inside the band, the blood pressure expand dialog, the presentation grid, the dashboard's two lines, the calendar week) and at 390 (presentation and Καρτέλα stack, small charts one per row). Two verification traps recorded in corrections.md: puppeteer's clip and fullPage captures catch Recharts mid-measure, and a killed `next dev` can leave `.next` unreadable.

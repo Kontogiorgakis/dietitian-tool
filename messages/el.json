@@ -112,16 +112,38 @@
     "healthyBmi": "υγιές ΔΜΣ",
     "target": "στόχος {weight}",
     "needTwo": "Χρειάζονται δύο μετρήσεις για να φανεί η πρόοδος.",
-    "compositionStory": "<b>Το λίπος πέφτει</b>, η άλιπη μάζα μένει.",
-    "compositionStoryFlat": "Λίπος και άλιπη μάζα σταθερά.",
-    "compositionStoryLeanDrop": "Το λίπος πέφτει <b>και η άλιπη μάζα μαζί του</b>.",
-    "compositionStoryFatUp": "<b>Το λίπος ανεβαίνει</b>, η άλιπη μάζα μένει.",
+    "compositionFat": {
+      "down": "<b>Το λίπος πέφτει</b>",
+      "up": "<b>Το λίπος ανεβαίνει</b>",
+      "flat": "Το λίπος μένει σταθερό"
+    },
+    "compositionLean": {
+      "down": "η άλιπη μάζα πέφτει",
+      "up": "η άλιπη μάζα ανεβαίνει",
+      "flat": "η άλιπη μάζα μένει"
+    },
     "weightStory": "Από {first} σε <b>{last} kg</b>.",
     "weightRemaining": "Απομένουν <b>{remaining} kg</b> μέχρι τον στόχο.",
     "waistStory": "<b>{diff} cm</b> από την πρώτη επίσκεψη.",
     "fat": "Λίπος",
     "lean": "Άλιπη μάζα",
-    "expand": "Μεγέθυνση"
+    "expand": "Μεγέθυνση",
+    "healthyWaist": "υγιής μέση προς ύψος",
+    "whtrNow": "Αναλογία μέσης προς ύψος {ratio}.",
+    "more": "Περισσότερες μετρήσεις",
+    "moreSubtitle": "Ό,τι άλλο μετρήθηκε σε δύο ή περισσότερες επισκέψεις.",
+    "hip": "Γοφοί",
+    "chest": "Στήθος",
+    "arm": "Βραχίονας",
+    "thigh": "Μηρός",
+    "water": "Νερό",
+    "skinfolds": "Δερματοπτυχές",
+    "skinfoldSum": "Άθροισμα τεσσάρων",
+    "bloodPressure": "Πίεση",
+    "systolic": "Συστολική",
+    "diastolic": "Διαστολική",
+    "pulse": "Σφυγμοί",
+    "fromTo": "Από {first} σε <b>{last}</b>."
   },
   "Measurement": {
     "title": "Νέα μέτρηση",

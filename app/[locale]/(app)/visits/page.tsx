@@ -8,6 +8,7 @@ import { UserAvatar } from "@/components/user-avatar";
 import { Link } from "@/lib/i18n/navigation";
 import { formatDayMonth, formatNum } from "@/lib/metro/format";
 import { listVisits } from "@/lib/metro/queries";
+import { HOVER_ROW, HOVER_ROW_CELL, HOVER_ROW_LINK, HOVER_ROW_TINT } from "@/lib/metro/row-hover";
 import { cn } from "@/lib/utils";
 import { BasePageProps } from "@/types/page-props";
 
@@ -83,11 +84,11 @@ const VisitsPage = async ({ params, searchParams }: VisitsPageProps) => {
             </thead>
             <tbody>
               {visits.map((v) => {
-                const td = cn("border-b border-hairline px-3 py-2.5 group-hover:border-transparent");
+                const td = cn(HOVER_ROW_CELL, "px-3");
                 return (
-                  <tr key={v.id} className="group relative transition-colors duration-300 hover:bg-accent-soft focus-within:bg-accent-soft">
-                    <td className={cn(td, "pl-0 text-body font-semibold whitespace-nowrap")}>
-                      <Link href={`/clients/${v.clientId}`} className="text-ink after:absolute after:inset-0 after:content-['']">
+                  <tr key={v.id} className={HOVER_ROW}>
+                    <td className={cn(td, HOVER_ROW_TINT, "pl-0 text-body font-semibold whitespace-nowrap")}>
+                      <Link href={`/clients/${v.clientId}`} className={cn("text-ink", HOVER_ROW_LINK)}>
                         {formatDayMonth(v.visitedAt)}
                       </Link>
                     </td>

@@ -5,6 +5,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ProgressCharts } from "@/components/metro/charts/progress-charts";
 import { PresentationShell } from "@/components/metro/presentation-shell";
 import { StatTile } from "@/components/metro/stat-tile";
+import { StatementList } from "@/components/metro/statement-list";
 import { Link } from "@/lib/i18n/navigation";
 import { formatChange, formatDate, formatDayMonth, formatNum, formatTime, fullName } from "@/lib/metro/format";
 import { getClient, getNextAppointment } from "@/lib/metro/queries";
@@ -43,7 +44,7 @@ const PresentationPage = async ({ params }: ClientPageProps) => {
                 {facts.remaining !== null && client.targetWeightKg !== null ? t.rich("remaining", { ...RICH, remaining: formatNum(facts.remaining), target: formatNum(client.targetWeightKg) }) : t("noTarget")}
               </p>
             </div>
-            <p className="max-w-[60ch] text-title-m font-normal leading-7 text-ink">{summary}</p>
+            <StatementList lines={summary} lead="text-title-m font-normal leading-7 text-ink" className="max-w-[60ch] gap-1.5" />
             {nextAppointment && <p className="text-body text-ink-muted">{t("nextVisit", { date: formatDayMonth(nextAppointment.startsAt), time: formatTime(nextAppointment.startsAt) })}</p>}
           </div>
           <div className="grid grid-cols-3 gap-3 lg:w-[400px] lg:grid-cols-1 lg:content-center">
@@ -60,7 +61,8 @@ const PresentationPage = async ({ params }: ClientPageProps) => {
           captions
           compact={false}
           frame="card"
-          className="grid gap-6 lg:grid-cols-3 lg:gap-8"
+          layout="grid"
+          className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8"
         />
       </main>
 

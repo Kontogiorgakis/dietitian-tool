@@ -3,7 +3,7 @@
 import { Loader2 } from "lucide-react";
 // eslint-disable-next-line no-restricted-imports -- the hook lives only in next/link; the Link component itself still comes from lib/i18n/navigation
 import { useLinkStatus } from "next/link";
-import { useTransition } from "react";
+import { useEffect, useTransition } from "react";
 
 import { Button } from "@/components/ui/button";
 import { useRouter } from "@/lib/i18n/navigation";
@@ -30,4 +30,16 @@ export const LinkPending = ({ className }: { className?: string }) => {
   const { pending } = useLinkStatus();
   if (!pending) return null;
   return <Loader2 className={cn("size-4 shrink-0 animate-spin text-accent", className)} strokeWidth={1.6} aria-hidden="true" />;
+};
+
+/**
+ * Inside a Link: reports that link's pending navigation state to a sibling outside the
+ * Link (useLinkStatus only works inside the Link's own subtree). Renders nothing itself.
+ */
+export const LinkPendingWatcher = ({ onPending }: { onPending: (pending: boolean) => void }) => {
+  const { pending } = useLinkStatus();
+  useEffect(() => {
+    onPending(pending);
+  }, [pending, onPending]);
+  return null;
 };

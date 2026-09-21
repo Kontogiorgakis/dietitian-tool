@@ -122,7 +122,7 @@ export const AppointmentForm = ({ clients, initial, defaultDate, defaultClientId
             </SelectContent>
           </Select>
         </Field>
-        <div className="grid gap-4 lg:grid-cols-2 lg:gap-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-3">
           <Field id="date" icon={CalendarDays} label={t("fields.date")}>
             <Input id="date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </Field>

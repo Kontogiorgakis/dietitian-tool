@@ -26,6 +26,8 @@ export interface ChartSpec {
   band?: { from: number; to: number; label: string };
   /** The dashed target-weight line. */
   reference?: { value: number; label: string };
+  /** Both series on the left axis, one scale (blood pressure); otherwise the second series gets its own axis on the right. */
+  sharedAxis?: boolean;
   /** Compact charts label the first and last visit only. */
   compact: boolean;
   ariaLabel: string;

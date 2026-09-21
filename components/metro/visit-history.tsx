@@ -39,7 +39,7 @@ export const VisitHistory = ({ measurements, className }: VisitHistoryProps) => 
               <Value value={m.waistCm} unit="cm" />
             </span>
           </div>
-          {m.note && <p className="text-body text-ink-muted">{m.note}</p>}
+          {m.note && <p className="text-body text-ink-muted break-words">{m.note}</p>}
         </article>
       ))}
     </section>

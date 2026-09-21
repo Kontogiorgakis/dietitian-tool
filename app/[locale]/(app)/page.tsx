@@ -1,10 +1,11 @@
-import { CalendarDays, ChartLine, ChevronRight, ClipboardList, Clock, Settings, UserRoundSearch } from "lucide-react";
+import { CalendarDays, CalendarPlus, ChartLine, ChevronRight, ClipboardList, Clock, Plus, Settings, UserRoundSearch } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 
 import { ChangeBadge } from "@/components/metro/change-badge";
 import { NavButton } from "@/components/metro/nav-button";
 import { SectionCard } from "@/components/metro/section-card";
 import { StatTile } from "@/components/metro/stat-tile";
+import { StatementList } from "@/components/metro/statement-list";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/user-avatar";
 import { Link } from "@/lib/i18n/navigation";
@@ -33,10 +34,12 @@ const HomePage = async ({ params }: BasePageProps) => {
         <div className="flex flex-col gap-1">
           <p className="text-caption text-accent">{t("dateLine", { weekday, date: formatDate(today) })}</p>
           <h1 className="text-display">{greeting}</h1>
-          <p className="text-body text-ink">
-            {t.rich("todaySummary", { ...RICH, count: todayAppointments.length, time: todayAppointments[0] ? formatTime(todayAppointments[0].startsAt) : "" })}{" "}
-            {nextAppointment ? t.rich("nextAppointment", { ...RICH, name: nextAppointment.clientName, date: formatDayMonth(nextAppointment.startsAt), time: formatTime(nextAppointment.startsAt) }) : t("noNextAppointment")}
-          </p>
+          <StatementList
+            lines={[
+              t.rich("todaySummary", { ...RICH, count: todayAppointments.length, time: todayAppointments[0] ? formatTime(todayAppointments[0].startsAt) : "" }),
+              nextAppointment ? t.rich("nextAppointment", { ...RICH, name: nextAppointment.clientName, date: formatDayMonth(nextAppointment.startsAt), time: formatTime(nextAppointment.startsAt) }) : t("noNextAppointment"),
+            ]}
+          />
         </div>
         <div className="flex items-center gap-2 pt-2 lg:pt-0">
           <Button asChild variant="secondary" size="icon" className="lg:hidden" aria-label={tNav("settings")}>
@@ -47,10 +50,13 @@ const HomePage = async ({ params }: BasePageProps) => {
           <NavButton href="/appointments" variant="secondary" icon={<CalendarDays strokeWidth={1.6} aria-hidden="true" />} className="hidden lg:inline-flex">
             {t("openCalendar")}
           </NavButton>
+          <NavButton href="/clients/new" icon={<Plus strokeWidth={1.6} aria-hidden="true" />} className="hidden lg:inline-flex">
+            {tNav("newClient")}
+          </NavButton>
         </div>
       </header>
 
-      <main className="grid flex-1 gap-4 px-gutter pt-4 pb-6 lg:grid-cols-2 lg:gap-6 lg:px-10 lg:pt-6 lg:pb-10">
+      <main className="grid flex-1 grid-cols-1 gap-4 px-gutter pt-4 pb-6 lg:grid-cols-2 lg:gap-6 lg:px-10 lg:pt-6 lg:pb-10">
         <SectionCard
           icon={Clock}
           title={t("today")}
@@ -73,8 +79,9 @@ const HomePage = async ({ params }: BasePageProps) => {
                     <span className="truncate text-body font-semibold">{a.clientName}</span>
                     {a.note && <span className="truncate text-caption text-ink-muted">{a.note}</span>}
                   </Link>
-                  <NavButton href={`/clients/${a.clientId}/measure`} variant="secondary" size="sm">
-                    {t("startMeasurement")}
+                  {/* Icon only on phones, where the label would squeeze the name to a few letters. */}
+                  <NavButton href={`/clients/${a.clientId}/measure`} variant="secondary" size="sm" icon={<Plus strokeWidth={1.6} aria-hidden="true" />} aria-label={t("startMeasurement")}>
+                    <span className="hidden sm:inline">{t("startMeasurement")}</span>
                   </NavButton>
                 </li>
               ))}
@@ -103,8 +110,8 @@ const HomePage = async ({ params }: BasePageProps) => {
                     <span className="truncate text-body font-semibold">{c.name}</span>
                     <span className="text-caption text-ink-muted">{c.daysSince === null ? t("neverVisited") : t("daysSince", { count: c.daysSince })}</span>
                   </Link>
-                  <NavButton href={`/appointments/new?client=${c.id}`} variant="secondary" size="sm">
-                    {t("book")}
+                  <NavButton href={`/appointments/new?client=${c.id}`} variant="secondary" size="sm" icon={<CalendarPlus strokeWidth={1.6} aria-hidden="true" />} aria-label={t("book")}>
+                    <span className="hidden sm:inline">{t("book")}</span>
                   </NavButton>
                 </li>
               ))}
@@ -138,7 +145,7 @@ const HomePage = async ({ params }: BasePageProps) => {
                       {v.changeKg !== null && <ChangeBadge changeKg={v.changeKg} towardGoal={v.towardGoal} />}
                     </span>
                   </span>
-                  <span className="text-body text-ink-muted">{v.note ?? t("noNote")}</span>
+                  <span className="text-body text-ink-muted break-words">{v.note ?? t("noNote")}</span>
                 </Link>
               </li>
             ))}

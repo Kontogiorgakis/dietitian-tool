@@ -67,3 +67,12 @@ export const remainingToTarget = (currentKg: number, targetKg: number | null): n
   if (targetKg === null) return null;
   return Math.abs(currentKg - targetKg);
 };
+
+/** The NICE waist-to-height bands: under 0,5 of height is healthy, 0,6 and over is high. */
+export const healthyWaistRange = (heightCm: number): { low: number; high: number } => ({ low: 0.4 * heightCm, high: 0.5 * heightCm });
+
+/** "120/80" as numbers, or null when the text is not two readings. */
+export const parseBloodPressure = (text: string | null): { systolic: number; diastolic: number } | null => {
+  const match = /^\s*(\d{2,3})\s*\/\s*(\d{2,3})\s*$/.exec(text ?? "");
+  return match ? { systolic: Number(match[1]), diastolic: Number(match[2]) } : null;
+};

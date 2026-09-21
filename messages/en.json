@@ -112,16 +112,38 @@
     "healthyBmi": "healthy BMI",
     "target": "target {weight}",
     "needTwo": "Two measurements are needed to show progress.",
-    "compositionStory": "<b>Fat is falling</b>, lean mass is holding.",
-    "compositionStoryFlat": "Fat and lean mass are steady.",
-    "compositionStoryLeanDrop": "Fat is falling <b>and lean mass with it</b>.",
-    "compositionStoryFatUp": "<b>Fat is rising</b>, lean mass is holding.",
+    "compositionFat": {
+      "down": "<b>Fat is falling</b>",
+      "up": "<b>Fat is rising</b>",
+      "flat": "Fat is steady"
+    },
+    "compositionLean": {
+      "down": "lean mass is falling",
+      "up": "lean mass is rising",
+      "flat": "lean mass is holding"
+    },
     "weightStory": "From {first} to <b>{last} kg</b>.",
     "weightRemaining": "<b>{remaining} kg</b> remain to the target.",
     "waistStory": "<b>{diff} cm</b> since the first visit.",
     "fat": "Body fat",
     "lean": "Lean mass",
-    "expand": "Expand"
+    "expand": "Expand",
+    "healthyWaist": "healthy waist-to-height",
+    "whtrNow": "Waist-to-height ratio {ratio}.",
+    "more": "More measurements",
+    "moreSubtitle": "Everything else measured at two or more visits.",
+    "hip": "Hip",
+    "chest": "Chest",
+    "arm": "Arm",
+    "thigh": "Thigh",
+    "water": "Water",
+    "skinfolds": "Skinfolds",
+    "skinfoldSum": "Sum of four",
+    "bloodPressure": "Blood pressure",
+    "systolic": "Systolic",
+    "diastolic": "Diastolic",
+    "pulse": "Pulse",
+    "fromTo": "From {first} to <b>{last}</b>."
   },
   "Measurement": {
     "title": "New measurement",
